@@ -1,0 +1,11 @@
+[package]
+name = 'the-move-lang'
+version = '1.0.0'
+
+[dependencies.AptosFramework]
+git = 'https://github.com/aptos-labs/aptos-core.git'
+rev = 'main'
+subdir = 'aptos-move/framework/aptos-framework'
+
+[addresses]
+the_move_lang = '0x23'

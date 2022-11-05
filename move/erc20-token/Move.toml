@@ -1,0 +1,12 @@
+[package]
+name = 'erc20'
+version = '1.0.0'
+
+
+[dependencies.AptosFramework]
+git = 'https://github.com/aptos-labs/aptos-core.git'
+rev = 'main'
+subdir = 'aptos-move/framework/aptos-framework'
+
+[addresses]
+erc20 = "0x20"
