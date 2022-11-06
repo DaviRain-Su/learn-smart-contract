@@ -4,3 +4,4 @@ storage
 .aptos
 .DS_Store
 out
+cache
