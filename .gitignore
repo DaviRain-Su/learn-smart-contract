@@ -3,3 +3,4 @@ storage
 .idea
 .aptos
 .DS_Store
+out

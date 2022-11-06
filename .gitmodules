@@ -1,0 +1,6 @@
+[submodule "solidity/hello_foundry/lib/forge-std"]
+	path = solidity/hello_foundry/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "solidity/solidity_by_example/lib/forge-std"]
+	path = solidity/solidity_by_example/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
