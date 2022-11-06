@@ -1,0 +1,12 @@
+[package]
+name = 'spl-coin'
+version = '1.0.0'
+
+[dependencies.AptosFramework]
+git = 'https://github.com/aptos-labs/aptos-core.git'
+rev = 'main'
+subdir = 'aptos-move/framework/aptos-framework'
+
+[addresses]
+spl_coin = "_"
+receiver = "0xab039b1739cde66c0aeb03f12b7e8e906bfcf275771301d396dcc0596f5d8ca6"
