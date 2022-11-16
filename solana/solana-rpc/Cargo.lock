@@ -3019,8 +3019,10 @@ name = "solana-rpc"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "rand 0.8.5",
  "solana-client",
  "solana-program",
+ "solana-sdk",
 ]
 
 [[package]]
