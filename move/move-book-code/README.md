@@ -1,5 +1,56 @@
 # Move book code example
 
+```bash
+move-cli 0.1.0
+Diem Association <opensource@diem.com>
+MoveCLI is the CLI that will be executed by the `move-cli` command The `cmd` argument is added here
+rather than in `Move` to make it easier for other crates to extend `move-cli`
+
+USAGE:
+    move [OPTIONS] <SUBCOMMAND>
+
+OPTIONS:
+        --abi                           Generate ABIs for packages
+        --arch <ARCHITECTURE>
+    -d, --dev                           Compile in 'dev' mode. The 'dev-addresses' and
+                                        'dev-dependencies' fields will be used if this flag is set.
+                                        This flag is useful for development of packages that expose
+                                        named addresses that are not set to a specific value
+        --doc                           Generate documentation for packages
+        --fetch-deps-only               Only fetch dependency repos to MOVE_HOME
+        --force                         Force recompilation of all packages
+    -h, --help                          Print help information
+        --install-dir <INSTALL_DIR>     Installation directory for compiled artifacts. Defaults to
+                                        current directory
+    -p, --path <PACKAGE_PATH>           Path to a package which the command should be run with
+                                        respect to
+        --skip-fetch-latest-git-deps    Skip fetching latest git dependencies
+        --test                          Compile in 'test' mode. The 'dev-addresses' and
+                                        'dev-dependencies' fields will be used along with any code
+                                        in the 'tests' directory
+    -v                                  Print additional diagnostics if available
+    -V, --version                       Print version information
+
+SUBCOMMANDS:
+    build           Build the package at `path`. If no path is provided defaults to current
+                        directory
+    coverage        Inspect test coverage for this package. A previous test run with the
+                        `--coverage` flag must have previously been run
+    disassemble     Disassemble the Move bytecode pointed to
+    docgen          Generate javadoc style documentation for Move packages
+    errmap          Generate error map for the package and its dependencies at `path` for use by
+                        the Move explanation tool
+    experimental    (Experimental) Run static analyses on Move source or bytecode
+    help            Print this message or the help of the given subcommand(s)
+    info            Print address information
+    new             Create a new Move package with name `name` at `path`. If `path` is not
+                        provided the package will be created in the directory `name`
+    prove           Run the Move Prover on the package at `path`. If no path is provided
+                        defaults to current directory. Use `.. prove .. -- <options>` to pass on
+                        options to the prover
+    sandbox         Execute a sandbox command
+    test            Run Move unit tests in this package
+```
 
 ## 模块和脚本
 
