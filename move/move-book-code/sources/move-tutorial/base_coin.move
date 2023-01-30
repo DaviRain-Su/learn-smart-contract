@@ -66,15 +66,67 @@ module move_book_code::base_coin {
         *balance_ref = balance + value;
     }
 
-    // Declare a unit test. It takes a signer called `account` with an
-    // address value of `0xC0FFEE`.
-    #[test(account = @0xC0FFEE)]
-    fun test_mint_10(account: signer) acquires Coin {
+    
+    #[test(account = @0x1)]
+    #[expected_failure] // This test should abort
+    fun mint_non_owner(account: signer) acquires Balance {
+        // Make sure the address we've chosen doesn't match the module
+        // owner address
+        publish_balance(&account);
+        assert!(signer::address_of(&account) != MODULE_OWNER, 0);
+        mint(&account, @0x1, 10);
+    }
+
+    #[test(account = @move_book_code)]
+    fun mint_check_balance(account: signer) acquires Balance {
         let addr = signer::address_of(&account);
-        mint(account, 10);
-        // Make sure there is a `Coin` resource under `addr` with a value of `10`.
-        // We can access this resource and its value since we are in the
-        // same module that defined the `Coin` resource.
-        assert!(borrow_global<Coin>(addr).value == 10, 0);
+        publish_balance(&account);
+        mint(&account, @move_book_code, 42);
+        assert!(balance_of(addr) == 42, 0);
+    }
+
+     #[test(account = @0x1)]
+    fun publish_balance_has_zero(account: signer) acquires Balance {
+        let addr = signer::address_of(&account);
+        publish_balance(&account);
+        assert!(balance_of(addr) == 0, 0);
+    }
+
+     #[test(account = @0x1)]
+    #[expected_failure] // Can specify an abort code
+    fun publish_balance_already_exists(account: signer) {
+        publish_balance(&account);
+        publish_balance(&account);
+    }
+
+     #[test]
+    #[expected_failure]
+    fun balance_of_dne() acquires Balance {
+        balance_of(@0x1);
+    }
+
+    #[test]
+    #[expected_failure]
+    fun withdraw_dne() acquires Balance {
+        // Need to unpack the coin since `Coin` is a resource
+        Coin { value: _ } = withdraw(@0x1, 0);
+    }
+
+    #[test(account = @0x1)]
+    #[expected_failure] // This test should fail
+    fun withdraw_too_much(account: signer) acquires Balance {
+        let addr = signer::address_of(&account);
+        publish_balance(&account);
+        Coin { value: _ } = withdraw(addr, 1);
+    }
+
+     #[test(account = @move_book_code)]
+    fun can_withdraw_amount(account: signer) acquires Balance {
+        publish_balance(&account);
+        let amount = 1000;
+        let addr = signer::address_of(&account);
+        mint(&account, addr, amount);
+        let Coin { value } = withdraw(addr, amount);
+        assert!(value == amount, 0);
     }
 }   
