@@ -4,13 +4,12 @@
 script {
     use std::debug;
     use std::string;
-    
+
     const ONE: u64 = 1;
 
     fun main(x: u64) {
-        let sum = x + ONE;
         debug::print(&string::utf8(b"this is example script! start ---- "));
-        debug::print(&sum);
+        debug::print(&move_book_code::test::plus_one(x));
         debug::print(&string::utf8(b"this is example script! end ----"));
     }
 }

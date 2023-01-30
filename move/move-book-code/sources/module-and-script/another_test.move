@@ -1,9 +1,8 @@
 module move_book_code::another_test {
     struct Example has copy, drop { a: address }
-    use std::debug;
     
-    public fun print() {
+    public fun print() : Example {
         let example = Example { a: @move_book_code };
-        debug::print(&example)
+        example
     }
 }

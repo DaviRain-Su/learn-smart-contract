@@ -1,5 +1,8 @@
 script {
+    use std::debug;
+
     fun main() {
-        move_book_code::another_test::print();
+        let example = move_book_code::another_test::print();
+        debug::print(&example);
     }
 }
