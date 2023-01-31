@@ -1,124 +1,119 @@
 module move_book_code::integers {
-    use std::debug;
-
-    public fun display_integers() {
-        // literals with explicit annotations;
+    #[test]
+    fun test_integers() {
+       // literals with explicit annotations;
         let explicit_u8 = 1u8;
-        debug::print(&explicit_u8);
+        assert!(explicit_u8 == 1u8, 1);
         let explicit_u16 = 1u16;
-        debug::print(&explicit_u16);
+        assert!(explicit_u16 == 1u16, 1);
         let explicit_u32 = 1u32;
-        debug::print(&explicit_u32);
+        assert!(explicit_u32 == 1u32, 1);
         let explicit_u64 = 2u64;
-        debug::print(&explicit_u64);
+        assert!(explicit_u64 == 2u64, 1);
         let explicit_u128 = 3u128;
-        debug::print(&explicit_u128);
+        assert!(explicit_u128 == 3u128, 1);
         let explicit_u256 = 1u256;
-        debug::print(&explicit_u256);
-
+        assert!(explicit_u256 == 1u256, 1);
 
         // literals with simple inference
         let simple_u8: u8 = 1;
-        debug::print(&simple_u8);
+        assert!(simple_u8 == 1u8, 1);
+
         let simple_u16: u16 = 1;
-        debug::print(&simple_u16);
+        assert!(simple_u16 == 1u16, 1);
+        
         let simple_u32: u32 = 1;
-        debug::print(&simple_u32);
+        assert!(simple_u32 == 1u32, 1);
+        
         let simple_u64: u64 = 2;
-        debug::print(&simple_u64);
+        assert!(simple_u64 == 2u64, 1);
+        
         let simple_u128: u128 = 3;
-        debug::print(&simple_u128);
+        assert!(simple_u128 == 3u128, 1);
+        
         let simple_u256: u256 = 1;
-        debug::print(&simple_u256);
+        assert!(simple_u256 == 1u256, 1);
 
         // literals with more complex inference
         let complex_u8 = 1; // inferred: u8
-        debug::print(&complex_u8);
+        assert!(complex_u8 == 1u8, 1);
+        
         // right hand argument to shift must be u8
         let _unused = 10 << complex_u8;
-        debug::print(&_unused);
+        assert!(_unused == 20u64, 1);
 
         let x: u8 = 0;
         let complex_u8 = 2; // inferred: u8
         // arguments to `+` must have the same type
         let _unused = x + complex_u8;
-        debug::print(&_unused);
+        assert!(_unused == 2, 1);
 
         let complex_u128 = 3; // inferred: u128
-        debug::print(&complex_u128);
+        assert!(complex_u128 == 3, 1);
         // inferred from function argument type
         // function_that_takes_u128(complex_u128);
 
         // literals can be written in hex
         let hex_u8: u8 = 0x1;
-        debug::print(&hex_u8);
+        assert!(hex_u8 == 1, 1);
         let hex_u16: u16 = 0x1;
-        debug::print(&hex_u16);
+        assert!(hex_u16 == 1, 1);
         let hex_u32: u32 = 0x1;
-        debug::print(&hex_u32);
+        assert!(hex_u32 == 1, 1);
         let hex_u64: u64 = 0xCAFE;
-        debug::print(&hex_u64);
+        assert!(hex_u64 == 51966, 1);
         let hex_u128: u128 = 0xDEADBEEF;
-        debug::print(&hex_u128); 
+        assert!(hex_u128 == 3735928559, 1);
         let hex_u256: u256 = 0x256;
-        debug::print(&hex_u256);
+        assert!(hex_u256 == 598, 1);
 
 
         // Arithmetic
-
         let a = 1 + 1;
-        debug::print(&a);
+        assert!(a == 2, 1);
         let a = 1 - 1;
-        debug::print(&a);
+        assert!(a == 0, 1);
         let a = 1 * 2;
-        debug::print(&a);
+        assert!(a == 2, 1);
         let a = 2 % 2;
-        debug::print(&a);
+        assert!(a == 0, 1);
         let a = 2 / 2;
-        debug::print(&a);
+        assert!(a == 1, 1);
         
         // Bitwise
 
         let a = 1 & 1;
-        debug::print(&a);
+        assert!(a == 1, 1);
         let a = 1 | 1;
-        debug::print(&a);
+        assert!(a == 1, 1);
         let a = 1 ^ 2;
-        debug::print(&a);
+        assert!(a == 3, 1);
 
         // Bit shift
-
         let a = 1 << 1;
-        debug::print(&a);
+        assert!(a == 2, 1);
         let a = 1 >> 1;
-        debug::print(&a);
+        assert!(a == 0, 1);
         
         // Comparisons
-
         let a = 1 < 1;
-        debug::print(&a);
+        assert!(a == false, 1);
         let a = 1 > 1;
-        debug::print(&a);
+        assert!(a == false, 1);
         let a = 1 <= 1;
-        debug::print(&a);
+        assert!(a == true, 1);
         let a = 1 >= 1;
-        debug::print(&a);
+        assert!(a == true, 1);
 
         // Equality
-
         let a = 1 == 1;
-        debug::print(&a);
+        assert!(a == true, 1);
         let a = 1 != 1;
-        debug::print(&a);
+        assert!(a == false, 1);
 
         // Casting
         // let a = 1u8 == 1u16;
         let a = (1u8 as u16) == 1u16;
-        debug::print(&a);
-    }   
-
-    #[test]
-    fun test_display_integers() {
-        display_integers()
+        assert!(a == true, 1);
     }
 }
