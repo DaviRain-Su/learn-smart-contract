@@ -1,6 +1,7 @@
 module merkle_tree::merkle_tree {
     use std::hash;
     use std::vector;
+    use openzeppelin_contracts::math;
 
     struct MerkleProof has drop {
         // data of leaf being checked
@@ -13,6 +14,10 @@ module merkle_tree::merkle_tree {
 
     public fun new(leaf: vector<u8>, pos: u64, path: vector<vector<u8>>) : MerkleProof {
         MerkleProof { leaf, pos, path }
+    }
+
+    public fun path(proof: &MerkleProof): &vector<vector<u8>> {
+        &proof.path
     }
 
     // hash a leaf value.
@@ -39,45 +44,72 @@ module merkle_tree::merkle_tree {
     /// Takes as input a list of leaves and a leaf position (pos).
     /// Returns the Merkle proof for the leaf at pos.
     public fun gen_merkle_proof(leaves: vector<vector<u8>>, pos: u64): vector<vector<u8>> {
-        // let height = (leaves.len() as f32).log2().ceil() as usize;
-        // assert!(height < MAX_HEIGHT, "Too many leaves.");
+        let height = math::log2_with_rounding((vector::length(&leaves) as u256), 0);
 
-        // let mut state = leaves
-        //     .iter()
-        //     .map(|v| hash_leaf(v.clone()))
-        //     .collect::<Vec<_>>();
+        let state = vector[];
+        let count = 0;
+        loop {
+            if (count == vector::length(&leaves)) {
+                break
+            };
+            let value = vector::borrow(&leaves, count);
+            vector::push_back(&mut state, hash_leaf(*value));
+            count = count + 1;
+        };
 
-        // // Pad the list of hashed leaves to a power of two
-        // let pad_len = 2_i32.pow(height as u32) - leaves.len() as i32;
-        // let mut pad = vec![b"\x00".to_vec(); pad_len as usize];
-        // state.append(&mut pad);
-
+        
+        // Pad the list of hashed leaves to a power of two
+        let pad_len = math::pow_u64(2, (height as u8)) - vector::length(&leaves);
+        let pad = vector[];
+        let count = 0;
+        loop {
+            if (count == pad_len) {
+                break
+            };
+            vector::push_back(&mut pad, b"\x00");
+            count = count + 1;
+        };
+        vector::append(&mut state, pad);
+        
         // // initialize a list that will contain the hashes in the proof
-        // let mut path = vec![];
+        let path: vector<vector<u8>> = vector[];
 
-        // let mut level_pos = pos; // local copy of pos
+        let level_pos = pos; // local copy of pos
 
-        // for _level in 0..height {
-        //     let sibling = if level_pos % 2 == 0 {
-        //         state[level_pos + 1].clone()
-        //     } else {
-        //         state[level_pos - 1].clone()
-        //     };
-        //     path.push(sibling);
-        //     level_pos /= 2;
+        let count = 0;
+        loop {
+            if (count == height) {
+                break
+            };
 
-        //     // hash internal nodes in the tree
-        //     state = (0..state.len())
-        //         .step_by(2)
-        //         .map(|i| hash_internal_node(state[i].clone(), state[i + 1].clone()))
-        //         .collect::<Vec<_>>();
-        // }
+            let sibling = if (level_pos % 2 == 0) {
+                vector::borrow(&state, level_pos + 1)
+            } else {
+                vector::borrow(&state, level_pos - 1)
+            };
 
-        // path
+            vector::push_back(&mut path, *sibling);
 
-        let result : vector<vector<u8>> = vector[];
+            level_pos = level_pos / 2;
 
-        result
+            let new_state = vector[];
+
+            let inner_count = 0;
+            loop {
+                if (inner_count == vector::length(&state)) {
+                    break
+                };
+                let left_v = vector::borrow(&state, inner_count);
+                let right_v = vector::borrow(&state, inner_count + 1);
+                let v = hash_internal_node(*left_v, *right_v);
+                vector::push_back(&mut new_state, v);
+                inner_count = inner_count + 2;
+            };
+            state = new_state;
+            count = count + 1;
+        };
+
+        path
     }
 
     /// computes a root from the given leaf and Merkle proof.
@@ -100,5 +132,37 @@ module merkle_tree::merkle_tree {
 
         root
     }
+}
 
+#[test_only]
+module merkle_tree::test_merkle_tree {
+    use merkle_tree::merkle_tree;
+    use std::vector;
+
+    #[test]
+    fun test_merkle_tree() {
+        let root = vector[214, 162, 27, 178, 251, 133, 232, 90, 225, 54, 51, 3, 226, 157, 58, 178, 181, 50, 123, 161, 184, 21, 241, 72, 52, 48, 228, 53, 242, 148, 165, 59];
+
+        let count = 0;
+        
+        let leaves = vector[];
+        loop {
+            if (count == 1000) {
+                break
+            };
+
+            vector::push_back(&mut leaves, b"data item");
+            count = count + 1;
+        };
+
+        // Generate proof for leaf #743
+        let pos = 743;
+        let path = merkle_tree::gen_merkle_proof(leaves, pos);
+        let leaf = vector::borrow(&leaves, pos);
+        let proof = merkle_tree::new(*leaf, pos, path);
+
+        // # Verify proof
+        let computed_root = merkle_tree::compute_merkle_root_from_proof(proof);
+        assert!(root == computed_root, 0);
+    }
 }

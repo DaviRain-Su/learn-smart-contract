@@ -5,8 +5,9 @@ version = "0.0.1"
 [dependencies]
 Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework", rev = "devnet" }
 MoveStdlib = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/deps/move-stdlib", rev = "devnet" }
+openzeppelin_contracts = { local = "../openzeppelin_contracts" }
 
 [addresses]
-merkle_tree =  "0x0"
+merkle_tree =  "0x011"
 std = "0x1"
 sui =  "0000000000000000000000000000000000000002"
